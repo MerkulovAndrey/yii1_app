@@ -6,26 +6,43 @@ if (Yii::app()->user->isGuest) {
 
     <h1>Подписка на новые книги авторов</h1>
 
-    <form name="subscribeForm[]" action="<?php echo Yii::app()->createUrl('author/subscribeSave'); ?>" method="post">
-        <table>
-            <thead>
-                <th style="width: 10%;">Подписаться</th>
-                <th>Автор</th>
-            </thead>
-            <?php foreach($authors as $author): ?>
-            <tr>
-                <td><input type="checkbox" name="subscribeForm[selectedIds][]" value="<?php echo $author->author_id?>"></td>
-                <td><?php echo $author->author_name; ?></td>
-            </tr>
-            <?php endforeach ?>
-        </table>
+    <div class="form">
+    <?php $form=$this->beginWidget(
+        'CActiveForm', [
+            'action' => Yii::app()->createUrl('/author/subscribeSave'),
+            'id'=>'subscribe-form',
+            'enableClientValidation'=>true,
+            'clientOptions'=>[
+                'validateOnSubmit'=>true,
+            ]
+        ]
+    ); ?>
 
+        <p class="note"><span class="required">*</span> Обязательное поле</p>
+        <div class="row">
+            <?php
+                echo $form->checkBoxList($model, 'author_ids', $author_menu, [
+                    'separator' => '',
+                    'template' => '<span>{input} {label}</span>'
+                ]);
+            ?>
+            <?php echo $form->error($model,'author_ids'); ?>
+        </div>
         <p></p>
+        <div class="row">
+            <?php echo $form->labelEx($model,'Телефон для уведомлений *'); ?>
+            <?php echo $form->textField($model,'guest_phone', ['required'=>true]); ?>
+            <?php echo $form->error($model,'author_sname'); ?>
+        </div>
 
-        <label for="text">Телефон для уведомлений:</label>
-        <input type="text" name="subscribeForm[phone]" size="15" />
-        <button type="submit">Подписаться</button>
-    </form>
+        <div class="row buttons">
+            <?php echo CHtml::resetButton('Очистить'); ?>
+            <?php echo CHtml::submitButton('Сохранить'); ?>
+        </div>
+
+    <?php $this->endWidget(); ?>
+    </div><!-- form -->
+
 <?php } else { ?>
     <h2>Страница не найдена</h2>
 <?php }?>

@@ -128,27 +128,6 @@ class Author extends CActiveRecord {
         return $data;
     }
 
-    public function subscribeInsert($data)
-    {
-        $transaction = Subscribe::model()->dbConnection->beginTransaction();
-        try {
-            foreach($data['selectedIds'] as $authorId) {
-                $model = new Subscribe;
-                $model->guest_phone = $data['phone'];
-                $model->author_id = $authorId;
-                if (!$model->save()) {
-                    throw new Exception('Ошибка при оформлении подписки');
-                }
-                unset($model);
-            }
-        } catch (Exception $e) {
-            $transaction->rollback();
-            throw $e;
-        }
-        $transaction->commit();
-        return true;
-    }
-
     public function rules()
     {
         return [

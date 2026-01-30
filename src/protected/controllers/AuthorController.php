@@ -52,13 +52,34 @@ class AuthorController extends Controller
 
     public function actionSubscribeIndex()
     {
-        $this->render('subscribe', ['authors' => Author::model()->getList()]);
+        $model = new Subscribe;
+        $menu = [];
+
+        $data = Author::model()->getList();
+        foreach ($data as $author) {
+            $menu[$author->author_id] = $author->author_name;
+        }
+
+        $this->render('subscribe', [
+            'author_menu' => $menu,
+            'model' => $model,
+        ]);
     }
 
     // подписка на новые книги автора
     public function actionSubscribeSave()
     {
-        Author::model()->subscribeInsert($_REQUEST['subscribeForm']);
-        $this->render('subscribe', ['authors' => Author::model()->getList()]);
+        if (isset($_REQUEST['Subscribe'])) {
+            $model = new Subscribe;
+            $model->guest_phone = $_REQUEST['Subscribe']['guest_phone'];
+            $model->author_ids = $_REQUEST['Subscribe']['author_ids'];
+        }
+        if ($model->validate()) {
+            Subscribe::model()->subscribeInsert($model);
+        }
+        $this->render('subscribe', [
+            'authors' => Author::model()->getList(),
+            'model' => $model,
+        ]);
     }
 }
