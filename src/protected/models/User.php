@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * User модель для управления пользователями
+ * @property string $user_passw
+ * @property string $_salt
+ */
 class User extends CActiveRecord {
     public $user_passw;
     private $_salt;
