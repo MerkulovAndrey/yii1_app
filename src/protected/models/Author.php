@@ -110,22 +110,18 @@ class Author extends CActiveRecord {
 		Author::model()->deleteAll('author_id='.$this->author_id);
 	}
 
-    public function getReport($params) : array
+    public function getReport($year) : array
     {
-        $data = [];
-        if (isset($params['year'])) {
-            $data = $this->dbConnection->createCommand("
-                SELECT CONCAT_WS(' ', a.author_fname, a.author_sname, a.author_lname) author, count(l.book_id) cnt
-                FROM link_book_author l
-                JOIN authors a ON a.author_id = l.author_id
-                JOIN books b ON b.book_id = l.book_id
-                WHERE b.book_year = :year
-                GROUP BY a.author_id
-                ORDER BY cnt DESC
-                LIMIT 10
-            ")->queryAll(true, ['year' => $params['year']]);
-        }
-        return $data;
+        return $this->dbConnection->createCommand("
+            SELECT CONCAT_WS(' ', a.author_fname, a.author_sname, a.author_lname) author, count(l.book_id) cnt
+            FROM link_book_author l
+            JOIN authors a ON a.author_id = l.author_id
+            JOIN books b ON b.book_id = l.book_id
+            WHERE b.book_year = :year
+            GROUP BY a.author_id
+            ORDER BY cnt DESC
+            LIMIT 10
+        ")->queryAll(true, ['year' => $year]);
     }
 
     public function rules()

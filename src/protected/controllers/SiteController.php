@@ -39,18 +39,20 @@ class SiteController extends Controller
 
 	public function actionReport()
 	{
-		$params = [];
-		$year = 0;
+		$data = [];
+        $formModel = new ReportTopForm;
 
-		if (isset($_REQUEST['year'])) {
-			$params['year'] = $_REQUEST['year'];
-			$year = $_REQUEST['year'];
-		}
+		if (isset($_REQUEST['ReportTopForm'])) {
+			$formModel->year = $_REQUEST['ReportTopForm']['year'];
+            if ($formModel->validate()) {
+                $data = Author::model()->getReport($formModel->year);
+            }
+        }
 
-		$this->render('report', [
-			'report' => Author::model()->getReport($params),
-			'year' => $year
-		]);
+        $this->render('report', [
+            'report' => $data,
+            'model' => $formModel
+        ]);
 	}
 
 	/**
