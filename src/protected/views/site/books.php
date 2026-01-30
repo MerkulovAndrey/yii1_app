@@ -11,6 +11,7 @@ $this->pageTitle=Yii::app()->name;
 	<thead>
 		<th>Название</th>
 		<th>Год</th>
+		<th>Автор</th>
 		<th>Описание</th>
 		<th>ISBN</th>
 		<th>Обложка</th>
@@ -22,10 +23,11 @@ $this->pageTitle=Yii::app()->name;
 	<tr>
 		<td><?php echo $book->book_title; ?></td>
 		<td><?php echo $book->book_year; ?></td>
+		<td><?php echo $book->book_authors; ?></td>
 		<td><?php echo $book->book_desc; ?></td>
 		<td><?php echo $book->book_isbn; ?></td>
 		<td><?php echo $book->book_pic; ?></td>
-        <td>&nbsp;</td>
+        <td><?php echo CHtml::link('Просмотр', Yii::app()->createUrl('/book/view/' . $book->book_id)); ?></td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
 	</tr>
@@ -36,6 +38,7 @@ $this->pageTitle=Yii::app()->name;
 	<thead>
 		<th>Название</th>
 		<th>Год</th>
+		<th>Автор</th>
 		<th>Описание</th>
 		<th>ISBN</th>
 		<th>Обложка</th>
@@ -47,14 +50,15 @@ $this->pageTitle=Yii::app()->name;
 	<tr>
 		<td><?php echo $book->book_title; ?></td>
 		<td><?php echo $book->book_year; ?></td>
+		<td><?php echo $book->book_authors; ?></td>
 		<td><?php echo $book->book_desc; ?></td>
 		<td><?php echo $book->book_isbn; ?></td>
 		<td><?php echo $book->book_pic; ?></td>
-        <td><?php echo CHtml::link('Просмотр', '/book/view/' . $book->book_id); ?></td>
-        <td><?php echo CHtml::link('Редактирование', '/book/update/' . $book->book_id); ?></td>
-        <td><?php echo CHtml::link('Удаление', '/book/delete/' . $book->book_id); ?></td>
+        <td><?php echo CHtml::link('Просмотр', Yii::app()->createUrl('/book/view/' . $book->book_id)); ?></td>
+        <td><?php echo CHtml::link('Редактирование', Yii::app()->createUrl('/book/update/' . $book->book_id)); ?></td>
+        <td><?php echo CHtml::link('Удаление', Yii::app()->createUrl('/book/delete/' . $book->book_id)); ?></td>
     </tr>
 	<?php endforeach ?>
-    <tr><td colspan="7">&nbsp;</td><td><?php echo CHtml::link('Добавить книгу', '/book/create'); ?></td></tr>
+    <tr><td colspan="8">&nbsp;</td><td><?php echo CHtml::link('Добавить книгу', '/book/create'); ?></td></tr>
 </table>
 <?php } ?>

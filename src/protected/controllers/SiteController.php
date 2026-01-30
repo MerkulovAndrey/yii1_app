@@ -28,7 +28,7 @@ class SiteController extends Controller
 
 	public function actionBooks()
 	{
-		$this->render('books', array('books' => Book::model()->findAll()));
+		$this->render('books', array('books' => Book::model()->getList()));
 	}
 
 	public function actionError()

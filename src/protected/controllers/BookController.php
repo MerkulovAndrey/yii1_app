@@ -7,7 +7,7 @@ class BookController extends Controller {
 
     // Просмотр книги
     public function actionView($id) {
-        $this->render('book_edit', array('book' => Book::model()->findByPk($id)));
+        $this->render('view', array('model' => Book::model()->getItem($id)));
     }
 
     public function actionCreate($model) {
