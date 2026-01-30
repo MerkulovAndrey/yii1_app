@@ -7,7 +7,7 @@
 // CWebApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'My Web Application',
+	'name'=>'Тестовое задание Yii1',
 
 	// preloading 'log' component
 	'preload'=>array('log'),
@@ -33,13 +33,11 @@ return array(
 	// application components
 	'components'=>array(
 
-		'user'=>array(
-			// enable cookie-based authentication
-			'allowAutoLogin'=>true,
+		'user' => array(
+			'allowAutoLogin' => true,
 		),
 
 		// uncomment the following to enable URLs in path-format
-		/*
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
@@ -48,7 +46,6 @@ return array(
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 		),
-		*/
 
 		// database settings are configured in database.php
 		'db'=>require(dirname(__FILE__).'/database.php'),
@@ -74,6 +71,10 @@ return array(
 			),
 		),
 
+		'authManager' => [
+			'class' => 'CPhpAuthManager',
+			'defaultRoles' => ['authenticated', 'guest'],
+		],
 	),
 
 	// application-level parameters that can be accessed
@@ -81,5 +82,6 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
+		'uploadBookPath'=>'uploads/books',
 	),
 );
