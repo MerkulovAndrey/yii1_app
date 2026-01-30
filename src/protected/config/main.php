@@ -34,9 +34,7 @@ return array(
 	'components'=>array(
 
 		'user' => array(
-			'class' => 'CWebUser',
 			'allowAutoLogin' => true,
-			'loginUrl' => '/user/login',
 		),
 
 		// uncomment the following to enable URLs in path-format

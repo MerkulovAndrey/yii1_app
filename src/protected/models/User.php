@@ -1,8 +1,13 @@
 <?php
 
 class User extends CActiveRecord {
-    public $password;
+    public $user_passw;
     private $_salt;
+
+    public static function model($className=__CLASS__)
+    {
+        return parent::model($className);
+    }
 
     public function tableName() {
         return 'users';
@@ -20,14 +25,13 @@ class User extends CActiveRecord {
     protected function afterValidate() {
         if ($this->isNewRecord) {
             $this->_salt = $this->generateSalt();
-            $this->password = $this->hashPassword($this->password, $this->_salt);
-            $this->salt = $this->_salt;
+            $this->user_passw = $this->hashPassword($this->user_passw, $this->_salt);
         }
         return true;
     }
 
     public function validatePassword($password) {
-        return $this->hashPassword($password, $this->salt) === $this->password;
+        return $this->hashPassword($password, $this->_salt) === $this->user_passw;
     }
 
     private function hashPassword($password, $salt) {
