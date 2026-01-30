@@ -30,8 +30,8 @@ class Author extends CActiveRecord {
     {
         $data = [];
         if (isset($params['year'])) {
-            $data = $this->findAllBySql("
-                SELECT CONCAT_WS(' ', a.author_fname, a.author_sname, a.author_lname), count(l.book_id) cnt
+            $data = $this->dbConnection->createCommand("
+                SELECT CONCAT_WS(' ', a.author_fname, a.author_sname, a.author_lname) author, count(l.book_id) cnt
                 FROM link_book_author l
                 JOIN authors a ON a.author_id = l.author_id
                 JOIN books b ON b.book_id = l.book_id
@@ -39,7 +39,7 @@ class Author extends CActiveRecord {
                 GROUP BY a.author_id
                 ORDER BY cnt DESC
                 LIMIT 10
-            ", ['year' => $params['year']]);
+            ")->queryAll(true, ['year' => $params['year']]);
         }
         return $data;
     }
