@@ -14,7 +14,8 @@ class Book extends CActiveRecord {
 		return parent::model($className);
 	}
 
-    public function tableName() {
+    public function tableName()
+    {
         return 'books';
     }
 

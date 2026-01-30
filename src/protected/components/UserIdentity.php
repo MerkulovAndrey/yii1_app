@@ -13,7 +13,8 @@ class UserIdentity extends CUserIdentity {
     private $_login;
     private $_role;
 
-    public function authenticate() {
+    public function authenticate()
+    {
         $user = User::model()->find('LOWER(user_login)=?', array(strtolower($this->username)));
 
         if ($user === null) {
@@ -29,11 +30,13 @@ class UserIdentity extends CUserIdentity {
         return !$this->errorCode;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->_id;
     }
 
-    public function getRole() {
+    public function getRole()
+    {
         return $this->_role;
     }
 }
