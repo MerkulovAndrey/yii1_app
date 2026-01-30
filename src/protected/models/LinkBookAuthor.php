@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * LinkBookAuthor модель связки книг с авторами
+ * @property int $book_id
+ * @property int $author_id
+ */
 class LinkBookAuthor extends CActiveRecord {
 
     public $book_id;
@@ -15,8 +19,14 @@ class LinkBookAuthor extends CActiveRecord {
         return 'link_book_author';
     }
 
-    // Записать новые связи
-    public function createLinks(int $bookId, array $authorsIds) : bool
+    /**
+     * Записать новые связи
+     *
+     * @param int $bookId
+     * @param array $authorsIds
+     * @return bool - true в случае успешной связки
+     */
+    public function createLinks(int $bookId, array $authorsIds): bool
     {
         foreach($authorsIds as $item) {
             $linkModel = new LinkBookAuthor;
@@ -30,8 +40,12 @@ class LinkBookAuthor extends CActiveRecord {
         return true;
     }
 
-    // Удалить старые связи
-    public function deleteLinks(int $bookId) : int
+    /**
+     * Удаление связей
+     * @param int $bookId
+     * @return int
+     */
+    public function deleteLinks(int $bookId): int
     {
         return $this->deleteAll("book_id=:book_id", ['book_id'=> $bookId]);
     }

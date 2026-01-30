@@ -1,13 +1,24 @@
 <?php
-
+/**
+ * Book модель для книг
+ *
+ * @property int $book_id
+ * @property string $book_title
+ * @property array $book_authors
+ * @property string $book_authors_ids- для значений из результатов sql-запроса
+ * @property array $book_authors_ids_arr - для передачи из/в формы
+ * @property int $book_year
+ * @property string $book_desc
+ * @property object $book_pic - обложка книги
+ */
 class Book extends CActiveRecord {
 
     const AUTOR_IDS_SEPARATOR = ';';
     public $book_id;
     public $book_title;
     public $book_authors;
-    public $book_authors_ids; // для значений из результатов sql-запроса
-    public $book_authors_ids_arr; // для передачи из/в формы
+    public $book_authors_ids;
+    public $book_authors_ids_arr;
     public $book_year;
     public $book_desc;
     public $book_pic;
