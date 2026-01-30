@@ -78,14 +78,14 @@ class Book extends CActiveRecord {
             }
 
             // Записать связи с авторами
-            $linkModel = new LinkBookAuthor;
-            $linkModel->book_id = $newBookId;
-
             foreach($data['book_authors_ids'] as $item) {
+                $linkModel = new LinkBookAuthor;
+                $linkModel->book_id = $newBookId;
                 $linkModel->author_id = $item;
                 if (!$linkModel->save()) {
                     throw new Exception('Ошибка при связывании книги с авторами');
                 }
+                unset($linkModel);
             }
 
             $transaction->commit();
