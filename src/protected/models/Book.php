@@ -22,7 +22,12 @@ class Book extends CActiveRecord {
         return 'books';
     }
 
-    public function getItem($id)
+    /**
+     * Вывод данных книги и автора
+     * @param int $id - код книги
+     * @return object
+     */
+    public function getItem(int $id): object
     {
         $model = $this->findBySql("
             SELECT
@@ -47,7 +52,11 @@ class Book extends CActiveRecord {
         return $model;
     }
 
-    public function getList()
+    /**
+     * Вывод списка книг
+     * @return array
+     */
+    public function getList(): array
     {
         return $this->findAllBySql("
             SELECT
@@ -63,14 +72,12 @@ class Book extends CActiveRecord {
         ", []);
     }
 
-    public function beforeSave()
-    {
-        $this->bookPicSave();
-
-        return parent::beforeSave();
-    }
-
-    public function create($data)
+    /**
+     * Создание книги, привязка авторов и отправка уведомления о новой книге
+     * @param array $data параметры книги
+     * @throws Exception $e при ошибке во время транзакции
+     */
+    public function create(array $data)
     {
         $model = new Book;
 
@@ -80,6 +87,7 @@ class Book extends CActiveRecord {
             $model->book_year = $data['book_year'];
             $model->book_desc = $data['book_desc'];
             $model->book_isbn = $data['book_isbn'];
+            $model->book_authors_ids_arr = $data['book_authors_ids_arr'];
             $model->book_pic = CUploadedFile::getInstance($model, 'book_pic');
 
             // Запись книги в БД
@@ -110,10 +118,14 @@ class Book extends CActiveRecord {
 
         // Отправить уведомления о новой книге автора/авторов
         $this->sendNewBookofAuthor($data['book_title'], $data['book_authors_ids_arr']);
-
     }
 
-    public function updateItem($data)
+    /**
+     * Обновление книги, привязка авторов
+     * @param array $data параметры книги
+     * @throws Exception $e при ошибке во время транзакции
+     */
+    public function updateItem(array $data)
     {
         $model = new Book;
 
@@ -121,7 +133,7 @@ class Book extends CActiveRecord {
         try {
             $model = $this->findByPk($data['book_id']);
             if ($model === null) {
-                throw new Exception(sprintf("Обновление книги: книга с id=%d не существует", $data->book_id));
+                throw new Exception(sprintf("Обновление книги: книга с id=%d не существует", $data['book_id']));
             }
 
             $model->book_title = $data['book_title'];
@@ -152,10 +164,15 @@ class Book extends CActiveRecord {
             $transaction->rollback();
             throw $e;
         }
-
     }
 
-    protected function sendNewBookofAuthor($bookTitle, $authorsIds)
+    /**
+     * Отправка уведомления о новой книге
+     * @param string $bookTitle название книги
+     * @param array $authorsIds массив кодов авторов
+     * @throws Exception $e при ошибке во время транзакции
+     */
+    protected function sendNewBookofAuthor(string $bookTitle, array $authorsIds)
     {
         foreach ($authorsIds as $id) {
             // получить имя автора
@@ -164,18 +181,23 @@ class Book extends CActiveRecord {
             // получить телефоны подписчиков
             $subscribers = Subscribe::model()->findAll('author_id=:id', ['id' => $id]);
 
-            // выполнить отправку
-            try {
-                if (!SmsNotification::sendNewBookofAuthor($subscribers, $author, $bookTitle)){
-                    throw new Exception('Не все SMS-уведомления были отправлены');
+            if (count($subscribers) > 0) {
+                // выполнить отправку
+                try {
+                    if (!SmsNotification::sendNewBookofAuthor($subscribers, $author, $bookTitle)){
+                        throw new Exception('Не все SMS-уведомления были отправлены');
+                    }
+                } catch (Exception $e) {
+                    throw $e;
                 }
-            } catch (Exception $e) {
-                throw $e;
             }
-
         }
     }
 
+    /**
+     * После удаления книги:
+     * - удаляется файл обложки
+     */
     protected function afterDelete()
 	{
 		parent::afterDelete();
@@ -190,7 +212,9 @@ class Book extends CActiveRecord {
         }
 	}
 
-    // Сохранение фото главной страницы книги на диск
+    /**
+     * Сохранение фото главной страницы книги на диск
+     */
     public function bookPicSave()
     {
         if ($this->isNewRecord && $this->book_pic) {
@@ -220,7 +244,16 @@ class Book extends CActiveRecord {
         }
     }
 
-    public function rules()
+    /** Перед сохранением книги:
+     * - Сохранение фото главной страницы книги на диск
+     */
+    public function beforeSave(): bool
+    {
+        $this->bookPicSave();
+        return parent::beforeSave();
+    }
+
+    public function rules(): array
     {
         return [
             // обязательные поля

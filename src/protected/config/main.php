@@ -71,6 +71,10 @@ return array(
 			),
 		),
 
+		'authManager' => [
+			'class' => 'CPhpAuthManager',
+			'defaultRoles' => ['authenticated', 'guest'],
+		],
 	),
 
 	// application-level parameters that can be accessed
