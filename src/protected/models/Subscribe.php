@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Subscribe класс для оформления подписок
+ * @property string $guest_phone - телефон для подписки
+ * @property int $author_id - код автора
+ * @property array $author_ids - список кодов авторов
+ * @property array $author_menu - массив для построения чекбоксов для выбора авторов
+ */
 class Subscribe extends CActiveRecord {
 
     public $guest_phone;
@@ -17,7 +23,12 @@ class Subscribe extends CActiveRecord {
         return 'subscribes';
     }
 
-    public function subscribeInsert($formData)
+    /**
+     * Запись подписки в БД
+     * @param array $formData - данные из web-формы подписок
+     * @return bool - true если запись в БД успешна
+     */
+    public function subscribeInsert(array $formData): bool
     {
         $validateOnSave = false; // валидацию при записи в БД не выполнять
         $transaction = Subscribe::model()->dbConnection->beginTransaction();
@@ -25,7 +36,7 @@ class Subscribe extends CActiveRecord {
             foreach($formData['author_ids'] as $authorId) {
                 $model = new Subscribe;
                 $model->author_id = $authorId;
-                $model->guest_phone = $formData->guest_phone;
+                $model->guest_phone = $formData['guest_phone'];
                 if (!$model->save($validateOnSave)) {
                     throw new Exception('Ошибка при оформлении подписки');
                 }
@@ -39,7 +50,11 @@ class Subscribe extends CActiveRecord {
         return true;
     }
 
-
+    /**
+     * Валидация номера телефона
+     * @param mixed $attribute - номер телефона
+     * @param mixed $attribute - номер телефона
+     */
     public function validatePhone($attribute, $params=[])
     {
         if (!preg_match('/^\+?[0-9]{10,15}$/', $this->$attribute)) {
@@ -47,6 +62,11 @@ class Subscribe extends CActiveRecord {
         }
     }
 
+    /**
+     * Валидация на наличие хотя бы одного выбранного чекбокса
+     * @param mixed $attribute - отмеченные чекбоксы
+     * @param array $params
+     */
     public function atLeastOneChecked($attribute, $params=[])
     {
         if (empty($this->$attribute)) {
