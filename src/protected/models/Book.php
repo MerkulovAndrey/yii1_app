@@ -59,7 +59,6 @@ class Book extends CActiveRecord {
 
         $transaction=$model->dbConnection->beginTransaction();
         try {
-
             $model->book_title = $data['book_title'];
             $model->book_year = $data['book_year'];
             $model->book_desc = $data['book_desc'];

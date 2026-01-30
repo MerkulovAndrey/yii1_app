@@ -42,7 +42,7 @@ class BookController extends Controller {
     public function actionDeleteConfirm($id)
     {
         // Подтверждение удаления книги (доступно юзерам)
-        $this->render('delete_confirm', ['model' => Book::model()->getItem($id)]);
+        $this->render('delete', ['model' => Book::model()->getItem($id)]);
     }
 
     public function actionSubscribe()
