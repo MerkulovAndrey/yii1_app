@@ -63,6 +63,13 @@ class Book extends CActiveRecord {
         ", []);
     }
 
+    public function beforeSave()
+    {
+        $this->bookPicSave();
+
+        return parent::beforeSave();
+    }
+
     public function create($data)
     {
         $model = new Book;
@@ -73,7 +80,7 @@ class Book extends CActiveRecord {
             $model->book_year = $data['book_year'];
             $model->book_desc = $data['book_desc'];
             $model->book_isbn = $data['book_isbn'];
-            $model->book_pic = $data['book_pic'];
+            $model->book_pic = CUploadedFile::getInstance($model, 'book_pic');
 
             // Запись книги в БД
             if (!$model->save()) {
@@ -173,5 +180,57 @@ class Book extends CActiveRecord {
 	{
 		parent::afterDelete();
 		Book::model()->deleteAll('book_id='.$this->book_id);
+
+        // удалить файл изображения если есть
+        if (isset($this->book_pic)) {
+            $fullPath = Yii::getPathOfAlias('webroot') . '/' . $this->book_pic;
+            if (file_exists($fullPath)) {
+                @unlink($fullPath);
+            }
+        }
 	}
+
+    // Сохранение фото главной страницы книги на диск
+    public function bookPicSave()
+    {
+        if ($this->isNewRecord && $this->book_pic) {
+
+            $uploadPath = Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . Yii::app()->params['uploadBookPath'];
+
+            // если директория для сохранения файлов не существует,
+            // пробуем её создать
+            if (!file_exists($uploadPath)) {
+                if (!mkdir($uploadPath, 0777, true)) {
+                   Yii::app()->user->setFlash('error', 'Не удалось создать каталог для загрузки.');
+                }
+            }
+
+            $dbFileName = Yii::app()->params['uploadBookPath'] . DIRECTORY_SEPARATOR . uniqid() . '.' . $this->book_pic->extensionName;
+
+            // Сохраняем файл на сервер
+            if (!$this->book_pic->saveAs(
+                Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . $dbFileName)
+            ) {
+                $this->addError('book_pic', 'Не удалось сохранить файл.');
+                return false;
+            }
+
+            // задаём серверное имя файла для сохранения в БД
+            $this->book_pic = $dbFileName;
+        }
+    }
+
+    public function rules()
+    {
+        return [
+
+            // Валидация загруженного файла
+            ['book_pic', 'file',
+                'types' => 'jpg, jpeg, png, gif',
+                'maxSize' => 1024 * 1024, // 1 МБ
+                'allowEmpty' => false,
+                'on' => 'insert' // только при создании
+            ],
+        ];
+    }
 }

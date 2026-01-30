@@ -10,7 +10,7 @@ if (!Yii::app()->user->isGuest) {
     <p><?php echo $model->book_authors; ?></p>
     <p><?php echo $model->book_year; ?> год</p>
     <p>Описание: <?php echo $model->book_desc; ?></p>
-    <p>Обложка <?php echo $model->book_pic; ?></p>
+    <p><img src="<?php echo Yii::app()->request->baseUrl . '/' . $model->book_pic; ?>" style="width: 100px;" alt="Обложка" /></p>
     <p>
         <?php
             echo CHtml::htmlButton('Назад', ['onclick' => 'history.back();']);

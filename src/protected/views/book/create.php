@@ -12,6 +12,7 @@ if (!Yii::app()->user->isGuest) {
             'action' => Yii::app()->createUrl('/book/insert'),
             'id'=>'create-book-form',
             'enableClientValidation'=>true,
+            'htmlOptions' => ['enctype' => 'multipart/form-data'],
             'clientOptions'=>[
                 'validateOnSubmit'=>true,
             ]
@@ -58,9 +59,9 @@ if (!Yii::app()->user->isGuest) {
         </div>
 
         <div class="row">
-            <?php echo $form->labelEx($model,'Ссылка на изображение обложки'); ?>
-            <?php echo $form->textField($model,'book_pic'); ?>
-            <?php echo $form->error($model,'book_pic'); ?>
+            <?php echo $form->labelEx($model, 'Изображение для обложки'); ?>
+            <?php echo $form->fileField($model, 'book_pic'); ?>
+            <?php echo $form->error($model, 'book_pic'); ?>
         </div>
 
 

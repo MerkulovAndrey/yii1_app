@@ -26,7 +26,7 @@ $this->pageTitle=Yii::app()->name . ' - Каталог книг';
 		<td><?php echo $book->book_authors; ?></td>
 		<td><?php echo $book->book_desc; ?></td>
 		<td><?php echo $book->book_isbn; ?></td>
-		<td><?php echo $book->book_pic; ?></td>
+		<td><img src="<?php echo Yii::app()->request->baseUrl . '/' . $book->book_pic; ?>" style="width: 100px;" alt="Обложка" /></td>
         <td><?php echo CHtml::link('Просмотр', Yii::app()->createUrl('/book/view/' . $book->book_id)); ?></td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -53,7 +53,7 @@ $this->pageTitle=Yii::app()->name . ' - Каталог книг';
 		<td><?php echo $book->book_authors; ?></td>
 		<td><?php echo $book->book_desc; ?></td>
 		<td><?php echo $book->book_isbn; ?></td>
-		<td><?php echo $book->book_pic; ?></td>
+		<td><img src="<?php echo Yii::app()->request->baseUrl . '/' . $book->book_pic; ?>" style="width: 100px;" alt="Обложка" /></td>
         <td><?php echo CHtml::link('Просмотр', Yii::app()->createUrl('/book/view/' . $book->book_id)); ?></td>
         <td><?php echo CHtml::link('Редактирование', Yii::app()->createUrl('/book/edit/' . $book->book_id)); ?></td>
         <td><?php echo CHtml::link('Удаление', Yii::app()->createUrl('/book/deleteConfirm/' . $book->book_id)); ?></td>
