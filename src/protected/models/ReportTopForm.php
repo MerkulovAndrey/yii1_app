@@ -5,7 +5,7 @@
  */
 class ReportTopForm extends CFormModel
 {
-    public int $year;
+    public $year;
 
     public function rules()
     {
