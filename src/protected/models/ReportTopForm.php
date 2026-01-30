@@ -1,8 +1,11 @@
 <?php
-
+/**
+ * ReportTopForm модель формы для задания параметров отчёта
+ * @property int $year - год, за который нужно получить отчёт
+ */
 class ReportTopForm extends CFormModel
 {
-    public $year;
+    public int $year;
 
     public function rules()
     {
