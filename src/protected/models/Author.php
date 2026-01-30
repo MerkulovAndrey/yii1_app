@@ -148,4 +148,16 @@ class Author extends CActiveRecord {
         $transaction->commit();
         return true;
     }
+
+    public function rules()
+    {
+        return [
+            // обязательные поля
+            ['author_lname, author_fname', 'required'],
+            // длина полей
+            ['author_lname', 'length', 'max' => 50],
+            ['author_fname', 'length', 'max' => 50],
+            ['author_sname', 'length', 'max' => 50],
+        ];
+    }
 }
