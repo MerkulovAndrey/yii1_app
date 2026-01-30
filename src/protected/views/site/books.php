@@ -1,7 +1,7 @@
 <?php
 /* @var $this BookController */
 
-$this->pageTitle=Yii::app()->name;
+$this->pageTitle=Yii::app()->name . ' - Каталог книг';
 ?>
 
 <h1>Каталог книг</h1>

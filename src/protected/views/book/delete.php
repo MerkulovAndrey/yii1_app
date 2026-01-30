@@ -1,7 +1,10 @@
 <?php
 /* @var $this BookController */
+if (Yii::app()->user->isGuest) {
+    echo '';
+}
 
-$this->pageTitle=Yii::app()->name;
+$this->pageTitle=Yii::app()->name. ' - Удаление книги';
 ?>
 
 <h1>Подтвердить удаление книги</h1>
@@ -10,4 +13,14 @@ $this->pageTitle=Yii::app()->name;
 <p><?php echo $model->book_year; ?> год</p>
 <p>Описание: <?php echo $model->book_desc; ?></p>
 <p>Обложка <?php echo $model->book_pic; ?></p>
-<p>Назад | <?php echo CHtml::link('Удалить', Yii::app()->createUrl('/book/delete/' . $model->book_id)); ?></p>
+<p>
+    <?php
+        echo CHtml::htmlButton('Назад', ['onclick' => 'history.back();']);
+
+        echo "&nbsp;&nbsp;";
+
+        echo CHtml::htmlButton('Удалить', [
+            'onclick' => "window.location.replace('" . Yii::app()->createUrl('/book/delete/' . $model->book_id) . "');"
+        ]);
+    ?>
+</p>

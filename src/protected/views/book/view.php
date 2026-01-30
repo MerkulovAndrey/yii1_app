@@ -1,7 +1,7 @@
 <?php
 /* @var $this BookController */
 
-$this->pageTitle=Yii::app()->name;
+$this->pageTitle=Yii::app()->name . ' - Просмотр книги';
 ?>
 
 <h1>О книге</h1>
@@ -10,4 +10,6 @@ $this->pageTitle=Yii::app()->name;
 <p><?php echo $model->book_year; ?> год</p>
 <p>Описание: <?php echo $model->book_desc; ?></p>
 <p>Обложка <?php echo $model->book_pic; ?></p>
-<p>Назад</p>
+<p><?php
+        echo CHtml::htmlButton('Назад', ['onclick' => 'history.back();']);
+?></p>

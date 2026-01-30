@@ -8,9 +8,6 @@ if (Yii::app()->user->isGuest) {
 }
 
 $this->pageTitle=Yii::app()->name . ' - Редактирование книги';
-$this->breadcrumbs=array(
-	'Редактирование книги',
-);
 ?>
 
 <h1>Редактирование книги</h1>
@@ -76,7 +73,13 @@ $this->breadcrumbs=array(
 
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton('Сохранить'); ?>
+		<?php
+		 	echo CHtml::htmlButton('Назад', ['onclick' => 'history.back();']);
+
+        	echo "&nbsp;&nbsp;";
+
+			echo CHtml::submitButton('Сохранить');
+		?>
 	</div>
 
 <?php $this->endWidget(); ?>

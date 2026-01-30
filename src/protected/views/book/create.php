@@ -8,9 +8,6 @@ if (Yii::app()->user->isGuest) {
 }
 
 $this->pageTitle=Yii::app()->name . ' - Добавление книги';
-$this->breadcrumbs=array(
-	'Добавление книги',
-);
 ?>
 
 <h1>Добавление книги</h1>
@@ -74,7 +71,8 @@ $this->breadcrumbs=array(
 
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton('Создать'); ?>
+		<?php echo CHtml::resetButton('Очистить'); ?>
+		<?php echo CHtml::submitButton('Сохранить'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>
