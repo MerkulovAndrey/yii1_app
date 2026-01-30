@@ -70,16 +70,13 @@ class AuthorController extends Controller
     public function actionSubscribeSave()
     {
         if (isset($_REQUEST['Subscribe'])) {
-            $model = new Subscribe;
-            $model->guest_phone = $_REQUEST['Subscribe']['guest_phone'];
-            $model->author_ids = $_REQUEST['Subscribe']['author_ids'];
+            $formData = new Subscribe;
+            $formData->guest_phone = $_REQUEST['Subscribe']['guest_phone'];
+            $formData->author_ids = $_REQUEST['Subscribe']['author_ids'];
+            if ($formData->validate()) {
+                Subscribe::model()->subscribeInsert($formData);
+            }
         }
-        if ($model->validate()) {
-            Subscribe::model()->subscribeInsert($model);
-        }
-        $this->render('subscribe', [
-            'authors' => Author::model()->getList(),
-            'model' => $model,
-        ]);
+        $this->redirect(Yii::app()->createUrl('/author/subscribeIndex'));
     }
 }

@@ -17,12 +17,16 @@ class Subscribe extends CActiveRecord {
         return 'subscribes';
     }
 
-    public function subscribeInsert($model)
+    public function subscribeInsert($formData)
     {
+        $validateOnSave = false; // валидацию при записи в БД не выполнять
         $transaction = Subscribe::model()->dbConnection->beginTransaction();
         try {
-            foreach($model['selectedIds'] as $authorId) {
-                if (!$model->save()) {
+            foreach($formData['author_ids'] as $authorId) {
+                $model = new Subscribe;
+                $model->author_id = $authorId;
+                $model->guest_phone = $formData->guest_phone;
+                if (!$model->save($validateOnSave)) {
                     throw new Exception('Ошибка при оформлении подписки');
                 }
                 unset($model);
@@ -36,19 +40,19 @@ class Subscribe extends CActiveRecord {
     }
 
 
-    public function validatePhone($attribute, $params)
+    public function validatePhone($attribute, $params=[])
     {
         if (!preg_match('/^\+?[0-9]{10,15}$/', $this->$attribute)) {
-            $this->addError($attribute, 'Неверный формат телефона.');
+            $this->addError($attribute, 'Неверный формат телефона');
         }
     }
 
-    public function atLeastOneChecked($attribute, $params)
-{
-    if (empty($this->$attribute)) {
-        $this->addError($attribute, 'Необходимо выбрать хотя бы один вариант.');
+    public function atLeastOneChecked($attribute, $params=[])
+    {
+        if (empty($this->$attribute)) {
+            $this->addError($attribute, 'Необходимо выбрать хотя бы один вариант');
+        }
     }
-}
 
     public function rules()
     {
