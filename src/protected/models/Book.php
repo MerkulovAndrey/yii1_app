@@ -223,6 +223,14 @@ class Book extends CActiveRecord {
     public function rules()
     {
         return [
+            // обязательные поля
+            ['book_title, book_year, book_isbn, book_authors_ids_arr', 'required'],
+            // длина полей
+            ['book_title', 'length', 'max' => 200],
+            ['book_year', 'length', 'max' => 4],
+            ['book_isbn', 'length', 'min'=> 22, 'max' => 22],
+            // год
+            ['book_year', 'numerical', 'min' => 0, 'max' => getdate()['year'],'integerOnly' => true],
 
             // Валидация загруженного файла
             ['book_pic', 'file',

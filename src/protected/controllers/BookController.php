@@ -25,8 +25,16 @@ class BookController extends Controller {
 
     public function actionInsert()
     {
-        Book::model()->create($_REQUEST['Book']);
-        $this->render('index', ['books' => Book::model()->getList()]);
+        if ($this->validate()) {
+            Book::model()->create($_REQUEST['Book']);
+            $this->render('index', ['books' => Book::model()->getList()]);
+        } else {
+            // ошибки валидации
+            $this->render('create', [
+                'model' => Book::model(),
+                'author_list' => Author::model()->getList()
+            ]);
+        }
     }
 
     public function actionEdit($id)
