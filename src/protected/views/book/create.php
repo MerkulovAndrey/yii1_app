@@ -1,8 +1,4 @@
 <?php
-/* @var $this BookController */
-/* @var $model Book */
-/* @var $form CActiveForm  */
-
 if (!Yii::app()->user->isGuest) {
 
     $this->pageTitle=Yii::app()->name . ' - Добавление книги';

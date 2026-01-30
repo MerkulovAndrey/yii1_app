@@ -4,7 +4,19 @@ class AuthorController extends Controller
 {
     public function actionIndex()
     {
-        $this->render('index', ['authors' => Author::model()->getList()]);
+        $this->render('index', [
+            'model' =>  Author::model(),
+            'authors' => Author::model()->getList()
+        ]);
+    }
+
+    public function actionInsert()
+    {
+        Author::model()->create($_REQUEST['Author']);
+        $this->render('index', [
+            'model' =>  Author::model(),
+            'authors' => Author::model()->getList()
+        ]);
     }
 
     public function actionEdit($id)
@@ -16,14 +28,20 @@ class AuthorController extends Controller
     public function actionUpdate()
     {
         Author::model()->updateItem($_REQUEST['Author']);
-        $this->render('index', ['authors' => Author::model()->getList()]);
+        $this->render('index', [
+            'model' =>  Author::model(),
+            'authors' => Author::model()->getList()
+        ]);
     }
 
     public function actionDelete($id)
     {
         // Удаление автора (доступно юзерам)
         Author::model()->findByPk($id)->delete();
-        $this->render('index', ['authors' => Author::model()->getList()]);
+        $this->render('index', [
+            'model' =>  Author::model(),
+            'authors' => Author::model()->getList()
+        ]);
     }
 
     public function actionDeleteConfirm($id)

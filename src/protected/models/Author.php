@@ -53,6 +53,29 @@ class Author extends CActiveRecord {
         ", []);
     }
 
+    public function create($data)
+    {
+        $model = new Author;
+
+        $transaction=$model->dbConnection->beginTransaction();
+        try {
+            $model->author_fname = $data['author_fname'];
+            $model->author_lname = $data['author_lname'];
+            $model->author_sname = $data['author_sname'];
+
+            // Запись автора в БД
+            if (!$model->save()) {
+                throw new Exception('Ошибка при сохранении автора');
+            }
+
+            $transaction->commit();
+
+        } catch (Exception $e) {
+            $transaction->rollback();
+            throw $e;
+        }
+    }
+
     public function updateItem($data)
     {
         $model = new Author;
@@ -64,7 +87,7 @@ class Author extends CActiveRecord {
                 throw new Exception(sprintf("Обновление автора: автор с id=%d не существует", $data->author_id));
             }
 
-            $model->author_lname = $data['author_lname'];
+            $model->author_fname = $data['author_fname'];
             $model->author_lname = $data['author_lname'];
             $model->author_sname = $data['author_sname'];
 
