@@ -57,11 +57,6 @@ class BookController extends Controller {
         $this->render('delete', ['model' => Book::model()->getItem($id)]);
     }
 
-    public function actionSubscribe()
-    {
-        // Подписка на авторов (доступно только гостям)
-    }
-
     public function accessRules()
     {
         return [

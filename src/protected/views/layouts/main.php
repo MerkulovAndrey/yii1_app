@@ -33,6 +33,7 @@
 				array('label'=>'Книги', 'url'=>array('/book/index')),
 				// ** array('label'=>'Авторы', 'url'=>array('/site/contact')),
 				array('label'=>'Топ-10 Авторов', 'url'=>array('/site/report')),
+				array('label'=>'Подписка на авторов', 'url'=>array('/author/index')),
 				array('label'=>'Войти', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
 				array('label'=>'Выйти ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
 			),
