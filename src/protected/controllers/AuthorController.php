@@ -1,7 +1,14 @@
 <?php
-
+/**
+ * AuthorController контроллер для работы с авторами
+ */
 class AuthorController extends Controller
 {
+    /**
+     * Главная страница авторов:
+     * - Список авторов
+     * - Форма добавления автора
+     */
     public function actionIndex()
     {
         $this->render('index', [
@@ -10,6 +17,9 @@ class AuthorController extends Controller
         ]);
     }
 
+    /**
+     * Запись автора в БД
+     */
     public function actionInsert()
     {
         Author::model()->create($_REQUEST['Author']);
@@ -19,12 +29,18 @@ class AuthorController extends Controller
         ]);
     }
 
-    public function actionEdit($id)
+    /**
+     * Страница редактирования автора (доступно юзерам)
+     * @param int $id - код автора
+     */
+    public function actionEdit(int $id)
     {
-        // Редактирование автора (доступно юзерам)
         $this->render('edit', ['model' => Author::model()->getItemFull($id)]);
     }
 
+    /**
+     * Обновление автора в БД
+     */
     public function actionUpdate()
     {
         Author::model()->updateItem($_REQUEST['Author']);
@@ -34,6 +50,10 @@ class AuthorController extends Controller
         ]);
     }
 
+    /**
+     * Удаление автора из БД
+     * @param mixed $id - код автора
+     */
     public function actionDelete($id)
     {
         // Удаление автора (доступно юзерам)
@@ -44,12 +64,19 @@ class AuthorController extends Controller
         ]);
     }
 
+    /**
+     * Страница подтверждения удаления автора
+     * @param mixed $id - код автора
+     */
     public function actionDeleteConfirm($id)
     {
         // Подтверждение удаления автора (доступно юзерам)
         $this->render('delete', ['model' => Author::model()->getItem($id)]);
     }
 
+    /**
+     * Страница оформления подписки
+     */
     public function actionSubscribeIndex()
     {
         $model = new Subscribe;
@@ -66,7 +93,9 @@ class AuthorController extends Controller
         ]);
     }
 
-    // подписка на новые книги автора
+    /**
+     * Сохранение подписок в БД
+     */
     public function actionSubscribeSave()
     {
         if (isset($_REQUEST['Subscribe'])) {
@@ -78,5 +107,27 @@ class AuthorController extends Controller
             }
         }
         $this->redirect(Yii::app()->createUrl('/author/subscribeIndex'));
+    }
+
+    public function filters(): array
+    {
+        return [
+            'accessControl', // подключаем фильтр контроля доступа
+        ];
+    }
+
+    public function accessRules(): array
+    {
+        return [
+            /* **
+            ['deny',
+                'actions' => ['insert', 'delete', 'edit', 'update'],
+                'roles' => ['guest'],
+            ]*/
+            ['allow',
+                'actions' => ['insert', 'delete', 'edit', 'update'],
+                'users' => ['@'],
+            ]
+        ];
     }
 }

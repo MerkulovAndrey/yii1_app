@@ -25,18 +25,18 @@ class Subscribe extends CActiveRecord {
 
     /**
      * Запись подписки в БД
-     * @param array $formData - данные из web-формы подписок
+     * @param object $formData - данные из web-формы подписок
      * @return bool - true если запись в БД успешна
      */
-    public function subscribeInsert(array $formData): bool
+    public function subscribeInsert(object $formData): bool
     {
         $validateOnSave = false; // валидацию при записи в БД не выполнять
         $transaction = Subscribe::model()->dbConnection->beginTransaction();
         try {
-            foreach($formData['author_ids'] as $authorId) {
+            foreach($formData->author_ids as $authorId) {
                 $model = new Subscribe;
                 $model->author_id = $authorId;
-                $model->guest_phone = $formData['guest_phone'];
+                $model->guest_phone = $formData->guest_phone;
                 if (!$model->save($validateOnSave)) {
                     throw new Exception('Ошибка при оформлении подписки');
                 }
@@ -53,7 +53,7 @@ class Subscribe extends CActiveRecord {
     /**
      * Валидация номера телефона
      * @param mixed $attribute - номер телефона
-     * @param mixed $attribute - номер телефона
+     * @param mixed $params
      */
     public function validatePhone($attribute, $params=[])
     {

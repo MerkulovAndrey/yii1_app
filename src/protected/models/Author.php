@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Author Класс модели авторов
+ * @property int $author_id - код автора
+ * @property string $author_name - составное имя автора (ФИО)
+ * @property string $author_fname - имя
+ * @property string $author_lname - фамилия
+ * @property string $author_sname - отчество
+ */
 class Author extends CActiveRecord {
 
     public $author_id;
@@ -18,7 +25,11 @@ class Author extends CActiveRecord {
         return 'authors';
     }
 
-    public function getItem($authorId)
+    /**
+     * Получение данных автора в виде: код, ФИО
+     * @param int $authorId - код автора
+     */
+    public function getItem(int $authorId)
     {
         return $this->findBySql("
             SELECT
@@ -29,6 +40,10 @@ class Author extends CActiveRecord {
         ", ['id' => $authorId]);
     }
 
+    /**
+     * Получение ланных автора в виде: код, фамилия, имя, отчество
+     * @param int $authorId - код автора
+     */
     public function getItemFull($authorId)
     {
         return $this->findBySql("
@@ -42,6 +57,9 @@ class Author extends CActiveRecord {
         ", ['id' => $authorId]);
     }
 
+    /**
+     * Получение списка авторов
+     */
     public function getList()
     {
         return $this->findAllBySql("
@@ -53,7 +71,12 @@ class Author extends CActiveRecord {
         ", []);
     }
 
-    public function create($data)
+    /**
+     * Запись автора в БД
+     * @param array $data
+     * @throws Exception
+     */
+    public function create(array $data)
     {
         $model = new Author;
 
@@ -63,7 +86,6 @@ class Author extends CActiveRecord {
             $model->author_lname = $data['author_lname'];
             $model->author_sname = $data['author_sname'];
 
-            // Запись автора в БД
             if (!$model->save()) {
                 throw new Exception('Ошибка при сохранении автора');
             }
@@ -76,7 +98,12 @@ class Author extends CActiveRecord {
         }
     }
 
-    public function updateItem($data)
+    /**
+     * Обновление автора в БД
+     * @param array $data
+     * @throws Exception
+     */
+    public function updateItem(array $data)
     {
         $model = new Author;
 
@@ -84,7 +111,7 @@ class Author extends CActiveRecord {
         try {
             $model = $this->findByPk($data['author_id']);
             if ($model === null) {
-                throw new Exception(sprintf("Обновление автора: автор с id=%d не существует", $data->author_id));
+                throw new Exception(sprintf("Обновление автора: автор с id=%d не существует", $data['author_id']));
             }
 
             $model->author_fname = $data['author_fname'];
@@ -110,7 +137,11 @@ class Author extends CActiveRecord {
 		Author::model()->deleteAll('author_id='.$this->author_id);
 	}
 
-    public function getReport($year) : array
+    /**
+     * Получение отчёта Топ-10 авторов за указанный год
+     * @param int $year год
+     */
+    public function getReport(int $year) : array
     {
         return $this->dbConnection->createCommand("
             SELECT CONCAT_WS(' ', a.author_fname, a.author_sname, a.author_lname) author, count(l.book_id) cnt
