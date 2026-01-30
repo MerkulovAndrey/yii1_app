@@ -95,4 +95,10 @@ class Book extends CActiveRecord {
             throw $e;
         }
     }
+
+    protected function afterDelete()
+	{
+		parent::afterDelete();
+		Book::model()->deleteAll('book_id='.$this->book_id);
+	}
 }

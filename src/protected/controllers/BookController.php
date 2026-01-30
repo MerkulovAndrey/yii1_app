@@ -9,21 +9,22 @@ class BookController extends Controller {
     // Просмотр книги
     public function actionView($id)
     {
-        $this->render('view', array('model' => Book::model()->getItem($id)));
+        $this->render('view', ['model' => Book::model()->getItem($id)]);
     }
 
     public function actionCreate()
     {
         // Создание книги (доступно юзерам)
-        $this->render('create', array(
+        $this->render('create', [
             'model' => Book::model(),
             'author_list' => Author::model()->getList()
-        ));
+        ]);
     }
 
     public function actionInsert()
     {
         Book::model()->create($_REQUEST['Book']);
+        $this->render('/site/books', ['books' => Book::model()->getList()]);
     }
 
     public function actionUpdate($model)
@@ -34,6 +35,14 @@ class BookController extends Controller {
     public function actionDelete($id)
     {
         // Удаление книги (доступно юзерам)
+        Book::model()->findByPk($id)->delete();
+        $this->render('/site/books', ['books' => Book::model()->getList()]);
+    }
+
+    public function actionDeleteConfirm($id)
+    {
+        // Подтверждение удаления книги (доступно юзерам)
+        $this->render('delete_confirm', ['model' => Book::model()->getItem($id)]);
     }
 
     public function actionSubscribe()
@@ -43,11 +52,11 @@ class BookController extends Controller {
 
     public function accessRules()
     {
-        return array(
-            array('allow',
+        return [
+            ['allow',
                 'actions' => array('view', 'subscribe'),
                 'roles' => array('guest')
-            )
-        );
+            ]
+        ];
     }
 }
