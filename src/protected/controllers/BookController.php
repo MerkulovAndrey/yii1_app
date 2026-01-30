@@ -25,6 +25,7 @@ class BookController extends Controller {
      */
     public function actionCreate()
     {
+        $this->handleUnauthorizedUser();
         $this->render('create', [
             'model' => Book::model(),
             'author_list' => Author::model()->getList()
@@ -36,6 +37,7 @@ class BookController extends Controller {
      */
     public function actionInsert()
     {
+        $this->handleUnauthorizedUser();
         if (isset($_REQUEST['Book'])) {
             Book::model()->create($_REQUEST['Book']);
         }
@@ -48,7 +50,7 @@ class BookController extends Controller {
      */
     public function actionEdit(int $id)
     {
-        //
+        $this->handleUnauthorizedUser();
         $this->render('edit', [
             'model' => Book::model()->getItem($id),
             'author_list' => Author::model()->getList()
@@ -60,6 +62,7 @@ class BookController extends Controller {
      */
     public function actionUpdate()
     {
+        $this->handleUnauthorizedUser();
         if (isset($_REQUEST['Book'])) {
             Book::model()->updateItem($_REQUEST['Book']);
         }
@@ -72,6 +75,7 @@ class BookController extends Controller {
      */
     public function actionDelete(int $id)
     {
+        $this->handleUnauthorizedUser();
         Book::model()->findByPk($id)->delete();
         $this->render('index', ['books' => Book::model()->getList()]);
     }
@@ -82,23 +86,8 @@ class BookController extends Controller {
      *  */
     public function actionDeleteConfirm(int $id)
     {
+        $this->handleUnauthorizedUser();
         $this->render('delete', ['model' => Book::model()->getItem($id)]);
     }
 
-    public function filters(): array
-    {
-        return [
-            'accessControl', // подключаем фильтр контроля доступа
-        ];
-    }
-
-    public function accessRules(): array
-    {
-        return [
-            ['deny',
-                'actions' => ['create', 'insert', 'delete', 'deleteConfirm', 'edit', 'update'],
-                'roles' => ['guest'],
-            ]
-        ];
-    }
 }

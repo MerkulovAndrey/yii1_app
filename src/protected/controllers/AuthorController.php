@@ -22,6 +22,7 @@ class AuthorController extends Controller
      */
     public function actionInsert()
     {
+        $this->handleUnauthorizedUser();
         Author::model()->create($_REQUEST['Author']);
         $this->render('index', [
             'model' =>  Author::model(),
@@ -35,6 +36,7 @@ class AuthorController extends Controller
      */
     public function actionEdit(int $id)
     {
+        $this->handleUnauthorizedUser();
         $this->render('edit', ['model' => Author::model()->getItemFull($id)]);
     }
 
@@ -43,6 +45,7 @@ class AuthorController extends Controller
      */
     public function actionUpdate()
     {
+        $this->handleUnauthorizedUser();
         Author::model()->updateItem($_REQUEST['Author']);
         $this->render('index', [
             'model' =>  Author::model(),
@@ -56,7 +59,7 @@ class AuthorController extends Controller
      */
     public function actionDelete($id)
     {
-        // Удаление автора (доступно юзерам)
+        $this->handleUnauthorizedUser();
         Author::model()->findByPk($id)->delete();
         $this->render('index', [
             'model' =>  Author::model(),
@@ -70,7 +73,7 @@ class AuthorController extends Controller
      */
     public function actionDeleteConfirm($id)
     {
-        // Подтверждение удаления автора (доступно юзерам)
+        $this->handleUnauthorizedUser();
         $this->render('delete', ['model' => Author::model()->getItem($id)]);
     }
 
@@ -79,18 +82,22 @@ class AuthorController extends Controller
      */
     public function actionSubscribeIndex()
     {
-        $model = new Subscribe;
-        $menu = [];
+        if (Yii::app()->user->isGuest) {
+            $model = new Subscribe;
+            $menu = [];
 
-        $data = Author::model()->getList();
-        foreach ($data as $author) {
-            $menu[$author->author_id] = $author->author_name;
+            $data = Author::model()->getList();
+            foreach ($data as $author) {
+                $menu[$author->author_id] = $author->author_name;
+            }
+
+            $this->render('subscribe', [
+                'author_menu' => $menu,
+                'model' => $model,
+            ]);
+        } else {
+            $this->redirect(Yii::app()->homeUrl);
         }
-
-        $this->render('subscribe', [
-            'author_menu' => $menu,
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -98,36 +105,18 @@ class AuthorController extends Controller
      */
     public function actionSubscribeSave()
     {
-        if (isset($_REQUEST['Subscribe'])) {
-            $formData = new Subscribe;
-            $formData->guest_phone = $_REQUEST['Subscribe']['guest_phone'];
-            $formData->author_ids = $_REQUEST['Subscribe']['author_ids'];
-            if ($formData->validate()) {
-                Subscribe::model()->subscribeInsert($formData);
+        if (Yii::app()->user->isGuest) {
+            if (isset($_REQUEST['Subscribe'])) {
+                $formData = new Subscribe;
+                $formData->guest_phone = $_REQUEST['Subscribe']['guest_phone'];
+                $formData->author_ids = $_REQUEST['Subscribe']['author_ids'];
+                if ($formData->validate()) {
+                    Subscribe::model()->subscribeInsert($formData);
+                }
             }
+            $this->redirect(Yii::app()->createUrl('/author/subscribeIndex'));
+        } else {
+            $this->redirect(Yii::app()->homeUrl);
         }
-        $this->redirect(Yii::app()->createUrl('/author/subscribeIndex'));
-    }
-
-    public function filters(): array
-    {
-        return [
-            'accessControl', // подключаем фильтр контроля доступа
-        ];
-    }
-
-    public function accessRules(): array
-    {
-        return [
-            /* **
-            ['deny',
-                'actions' => ['insert', 'delete', 'edit', 'update'],
-                'roles' => ['guest'],
-            ]*/
-            ['allow',
-                'actions' => ['insert', 'delete', 'edit', 'update'],
-                'users' => ['@'],
-            ]
-        ];
     }
 }
