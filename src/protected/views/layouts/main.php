@@ -1,61 +1,87 @@
-<?php /* @var $this Controller */ ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="language" content="en">
+<?php
+/* @var $this BookController */
+/* @var $model Book */
+/* @var $form CActiveForm  */
 
-	<!-- blueprint CSS framework -->
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection">
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" media="print">
-	<!--[if lt IE 8]>
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/ie.css" media="screen, projection">
-	<![endif]-->
+if (!Yii::app()->user->isGuest) {
 
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css">
+    $this->pageTitle=Yii::app()->name . ' - Редактирование книги';
+    ?>
 
-	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
-</head>
+    <h1>Редактирование книги</h1>
 
-<body>
+    <div class="form">
+    <?php $form=$this->beginWidget(
+        'CActiveForm', [
+            'action' => Yii::app()->createUrl('/book/update'),
+            'id'=>'update-book-form',
+            'enableClientValidation'=>true,
+            'clientOptions'=>[
+                'validateOnSubmit'=>true,
+            ]
+        ]
+    ); ?>
 
-<div class="container" id="page">
+        <p class="note"><span class="required">*</span> Обязательное поле</p>
 
-	<div id="header">
-		<div id="logo">Yii1 - тестовое задание</div>
-	</div><!-- header -->
+        <?php echo CHtml::activeHiddenField($model,'book_id'); ?>
 
-	<div id="mainmenu">
-		<?php $this->widget('zii.widgets.CMenu',array(
-			'items'=>array(
-				array('label'=>'Главная', 'url'=>array('/site/index')),
-				array('label'=>'Книги', 'url'=>array('/book/index')),
-				// ** array('label'=>'Авторы', 'url'=>array('/site/contact')),
-				array('label'=>'Топ-10 Авторов', 'url'=>array('/site/report')),
-				array('label'=>'Подписка на авторов', 'url'=>array('/author/index')),
-				array('label'=>'Войти', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-				array('label'=>'Выйти ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
-			),
-		)); ?>
-	</div><!-- mainmenu -->
-	<?php if(isset($this->breadcrumbs)):?>
-		<?php $this->widget('zii.widgets.CBreadcrumbs', array(
-			'links'=>$this->breadcrumbs,
-		)); ?><!-- breadcrumbs -->
-	<?php endif?>
+        <div class="row">
+            <?php echo $form->labelEx($model,'Название книги *'); ?>
+            <?php echo $form->textField($model,'book_title', ['required'=>true]); ?>
+            <?php echo $form->error($model,'book_title'); ?>
+        </div>
 
-	<?php echo $content; ?>
+        <div class="row">
+            <?php echo $form->labelEx($model,'Авторы книги *'); ?>
+            <?php echo $form->listBox(
+                $model,'book_authors_ids_arr',
+                CHtml::listData(
+                    $author_list,
+                    'author_id',
+                    'author_name'),
+                    ['size' => '4', 'prompt'=>'-- можно выбрать нескольких --', 'multiple'=>true, 'required'=>true]
+            ); ?>
+            <?php echo $form->error($model,'book_title'); ?>
+        </div>
 
-	<div class="clear"></div>
+        <div class="row">
+            <?php echo $form->labelEx($model,'Год выхода *'); ?>
+            <?php echo $form->textField($model,'book_year', ['required'=>true]); ?>
+            <?php echo $form->error($model,'book_year'); ?>
+        </div>
 
-	<div id="footer">
-		Copyright &copy; <?php echo date('Y'); ?> by My Company.<br/>
-		All Rights Reserved.<br/>
-		<?php echo Yii::powered(); ?>
-	</div><!-- footer -->
+        <div class="row">
+            <?php echo $form->labelEx($model,'Описание'); ?>
+            <?php echo $form->textArea($model,'book_desc', ['rows' => 3, 'cols' => 70]); ?>
+            <?php echo $form->error($model,'book_desc'); ?>
+        </div>
 
-</div><!-- page -->
+        <div class="row">
+            <?php echo $form->labelEx($model,'ISBN *'); ?>
+            <?php echo $form->textField($model,'book_isbn', ['required'=>true]); ?>
+            <?php echo $form->error($model,'book_isbn'); ?>
+        </div>
 
-</body>
-</html>
+        <div class="row">
+            <?php echo $form->labelEx($model,'Ссылка на изображение обложки'); ?>
+            <?php echo $form->textField($model,'book_pic'); ?>
+            <?php echo $form->error($model,'book_pic'); ?>
+        </div>
+
+
+        <div class="row buttons">
+            <?php
+                echo CHtml::htmlButton('Назад', ['onclick' => 'history.back();']);
+
+                echo "&nbsp;&nbsp;";
+
+                echo CHtml::submitButton('Сохранить');
+            ?>
+        </div>
+
+    <?php $this->endWidget(); ?>
+    </div><!-- form -->
+<?php } else { ?>
+    <h2>Страница не найдена</h2>
+<?php }?>
