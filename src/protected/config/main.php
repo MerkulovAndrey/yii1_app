@@ -33,13 +33,13 @@ return array(
 	// application components
 	'components'=>array(
 
-		'user'=>array(
-			// enable cookie-based authentication
-			'allowAutoLogin'=>true,
+		'user' => array(
+			'class' => 'CWebUser',
+			'allowAutoLogin' => true,
+			'loginUrl' => '/user/login',
 		),
 
 		// uncomment the following to enable URLs in path-format
-		/*
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
@@ -48,7 +48,6 @@ return array(
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 		),
-		*/
 
 		// database settings are configured in database.php
 		'db'=>require(dirname(__FILE__).'/database.php'),
