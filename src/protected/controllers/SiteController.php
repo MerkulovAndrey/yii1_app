@@ -26,11 +26,6 @@ class SiteController extends Controller
 		$this->render('index');
 	}
 
-	public function actionBooks()
-	{
-		$this->render('books', array('books' => Book::model()->getList()));
-	}
-
 	public function actionError()
 	{
 		if($error=Yii::app()->errorHandler->error)
@@ -40,6 +35,15 @@ class SiteController extends Controller
 			else
 				$this->render('error', $error);
 		}
+	}
+
+	public function actionReport()
+	{
+		$params = [];
+		if (isset($_REQUEST['ReportForm'])) {
+			$params = $_REQUEST['ReportForm'];
+		}
+		$this->render('report', ['report' => Author::model()->getReport($params)]);
 	}
 
 	/**

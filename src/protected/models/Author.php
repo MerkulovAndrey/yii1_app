@@ -25,4 +25,22 @@ class Author extends CActiveRecord {
             ORDER BY author_name
         ", []);
     }
+
+    public function getReport($params) : array
+    {
+        $data = [];
+        if (isset($params['year'])) {
+            $data = $this->findAllBySql("
+                SELECT CONCAT_WS(' ', a.author_fname, a.author_sname, a.author_lname), count(l.book_id) cnt
+                FROM link_book_author l
+                JOIN authors a ON a.author_id = l.author_id
+                JOIN books b ON b.book_id = l.book_id
+                WHERE b.book_year = :year
+                GROUP BY a.author_id
+                ORDER BY cnt DESC
+                LIMIT 10
+            ", ['year' => $params['year']]);
+        }
+        return $data;
+    }
 }

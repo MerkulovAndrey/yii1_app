@@ -1,9 +1,11 @@
 <?php
 
 class BookController extends Controller {
+
+    // Список книг
     public function actionIndex()
     {
-        // Список книг
+		$this->render('index', ['books' => Book::model()->getList()]);
     }
 
     // Просмотр книги
@@ -24,7 +26,7 @@ class BookController extends Controller {
     public function actionInsert()
     {
         Book::model()->create($_REQUEST['Book']);
-        $this->render('/site/books', ['books' => Book::model()->getList()]);
+        $this->render('index', ['books' => Book::model()->getList()]);
     }
 
     public function actionEdit($id)
@@ -39,14 +41,14 @@ class BookController extends Controller {
     public function actionUpdate()
     {
         Book::model()->updateItem($_REQUEST['Book']);
-        $this->render('/site/books', ['books' => Book::model()->getList()]);
+        $this->render('index', ['books' => Book::model()->getList()]);
     }
 
     public function actionDelete($id)
     {
         // Удаление книги (доступно юзерам)
         Book::model()->findByPk($id)->delete();
-        $this->render('/site/books', ['books' => Book::model()->getList()]);
+        $this->render('index', ['books' => Book::model()->getList()]);
     }
 
     public function actionDeleteConfirm($id)
