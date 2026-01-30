@@ -4,6 +4,9 @@ class Author extends CActiveRecord {
 
     public $author_id;
     public $author_name;
+    public $author_fname;
+    public $author_lname;
+    public $author_sname;
 
 	public static function model($className=__CLASS__)
 	{
@@ -26,6 +29,19 @@ class Author extends CActiveRecord {
         ", ['id' => $authorId]);
     }
 
+    public function getItemFull($authorId)
+    {
+        return $this->findBySql("
+            SELECT
+                a.author_id,
+                a.author_lname,
+                a.author_fname,
+                a.author_sname
+            FROM authors a
+            WHERE a.author_id = :id
+        ", ['id' => $authorId]);
+    }
+
     public function getList()
     {
         return $this->findAllBySql("
@@ -36,6 +52,40 @@ class Author extends CActiveRecord {
             ORDER BY author_name
         ", []);
     }
+
+    public function updateItem($data)
+    {
+        $model = new Author;
+
+        $transaction=$model->dbConnection->beginTransaction();
+        try {
+            $model = $this->findByPk($data['author_id']);
+            if ($model === null) {
+                throw new Exception(sprintf("Обновление автора: автор с id=%d не существует", $data->author_id));
+            }
+
+            $model->author_lname = $data['author_lname'];
+            $model->author_lname = $data['author_lname'];
+            $model->author_sname = $data['author_sname'];
+
+            // Запись автора в БД
+            if (!$model->update()) {
+                throw new Exception('Ошибка при сохранении автора');
+            }
+
+            $transaction->commit();
+
+        } catch (Exception $e) {
+            $transaction->rollback();
+            throw $e;
+        }
+    }
+
+    protected function afterDelete()
+	{
+		parent::afterDelete();
+		Author::model()->deleteAll('author_id='.$this->author_id);
+	}
 
     public function getReport($params) : array
     {
