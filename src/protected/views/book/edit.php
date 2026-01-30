@@ -7,19 +7,19 @@ if (Yii::app()->user->isGuest) {
     echo '';
 }
 
-$this->pageTitle=Yii::app()->name . ' - Добавление книги';
+$this->pageTitle=Yii::app()->name . ' - Редактирование книги';
 $this->breadcrumbs=array(
-	'Добавление книги',
+	'Редактирование книги',
 );
 ?>
 
-<h1>Добавление книги</h1>
+<h1>Редактирование книги</h1>
 
 <div class="form">
 <?php $form=$this->beginWidget(
     'CActiveForm', [
-        'action' => Yii::app()->createUrl('/book/insert'),
-        'id'=>'create-book-form',
+        'action' => Yii::app()->createUrl('/book/update'),
+        'id'=>'update-book-form',
         'enableClientValidation'=>true,
         'clientOptions'=>[
             'validateOnSubmit'=>true,
@@ -28,6 +28,8 @@ $this->breadcrumbs=array(
 ); ?>
 
 	<p class="note"><span class="required">*</span> Обязательное поле</p>
+
+	<?php echo CHtml::activeHiddenField($model,'book_id'); ?>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'Название книги *'); ?>
@@ -38,7 +40,7 @@ $this->breadcrumbs=array(
     <div class="row">
 		<?php echo $form->labelEx($model,'Авторы книги *'); ?>
 		<?php echo $form->listBox(
-            $model,'book_authors_ids_arr',
+			$model,'book_authors_ids_arr',
             CHtml::listData(
                 $author_list,
                 'author_id',
@@ -74,7 +76,7 @@ $this->breadcrumbs=array(
 
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton('Создать'); ?>
+		<?php echo CHtml::submitButton('Сохранить'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

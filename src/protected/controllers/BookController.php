@@ -27,9 +27,19 @@ class BookController extends Controller {
         $this->render('/site/books', ['books' => Book::model()->getList()]);
     }
 
-    public function actionUpdate($model)
+    public function actionEdit($id)
     {
-        // Обновление книги (доступно юзерам)
+        // Редактирование книги (доступно юзерам)
+        $this->render('edit', [
+            'model' => Book::model()->getItem($id),
+            'author_list' => Author::model()->getList()
+        ]);
+    }
+
+    public function actionUpdate()
+    {
+        Book::model()->updateItem($_REQUEST['Book']);
+        $this->render('/site/books', ['books' => Book::model()->getList()]);
     }
 
     public function actionDelete($id)

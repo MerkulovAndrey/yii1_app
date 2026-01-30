@@ -55,7 +55,7 @@ $this->pageTitle=Yii::app()->name;
 		<td><?php echo $book->book_isbn; ?></td>
 		<td><?php echo $book->book_pic; ?></td>
         <td><?php echo CHtml::link('Просмотр', Yii::app()->createUrl('/book/view/' . $book->book_id)); ?></td>
-        <td><?php echo CHtml::link('Редактирование', Yii::app()->createUrl('/book/update/' . $book->book_id)); ?></td>
+        <td><?php echo CHtml::link('Редактирование', Yii::app()->createUrl('/book/edit/' . $book->book_id)); ?></td>
         <td><?php echo CHtml::link('Удаление', Yii::app()->createUrl('/book/deleteConfirm/' . $book->book_id)); ?></td>
     </tr>
 	<?php endforeach ?>
