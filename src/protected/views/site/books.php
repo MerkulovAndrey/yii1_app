@@ -1,0 +1,60 @@
+<?php
+/* @var $this BookController */
+
+$this->pageTitle=Yii::app()->name;
+?>
+
+<h1>Каталог книг</h1>
+
+<?php if (Yii::app()->user->isGuest) { ?>
+<table>
+	<thead>
+		<th>Название</th>
+		<th>Год</th>
+		<th>Описание</th>
+		<th>ISBN</th>
+		<th>Обложка</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</thead>
+	<?php foreach($books as $book): ?>
+	<tr>
+		<td><?php echo $book->book_title; ?></td>
+		<td><?php echo $book->book_year; ?></td>
+		<td><?php echo $book->book_desc; ?></td>
+		<td><?php echo $book->book_isbn; ?></td>
+		<td><?php echo $book->book_pic; ?></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+	</tr>
+	<?php endforeach ?>
+</table>
+<?php } else { ?>
+<table>
+	<thead>
+		<th>Название</th>
+		<th>Год</th>
+		<th>Описание</th>
+		<th>ISBN</th>
+		<th>Обложка</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</thead>
+	<?php foreach($books as $book): ?>
+	<tr>
+		<td><?php echo $book->book_title; ?></td>
+		<td><?php echo $book->book_year; ?></td>
+		<td><?php echo $book->book_desc; ?></td>
+		<td><?php echo $book->book_isbn; ?></td>
+		<td><?php echo $book->book_pic; ?></td>
+        <td><?php echo CHtml::link('Просмотр', '/book/view/' . $book->book_id); ?></td>
+        <td><?php echo CHtml::link('Редактирование', '/book/update/' . $book->book_id); ?></td>
+        <td><?php echo CHtml::link('Удаление', '/book/delete/' . $book->book_id); ?></td>
+    </tr>
+	<?php endforeach ?>
+    <tr><td colspan="7">&nbsp;</td><td><?php echo CHtml::link('Добавить книгу', '/book/create'); ?></td></tr>
+</table>
+<?php } ?>
