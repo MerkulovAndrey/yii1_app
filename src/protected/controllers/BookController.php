@@ -12,24 +12,33 @@ class BookController extends Controller {
         $this->render('view', array('model' => Book::model()->getItem($id)));
     }
 
-    public function actionCreate($model)
+    public function actionCreate()
     {
         // Создание книги (доступно юзерам)
+        $this->render('create', array(
+            'model' => Book::model(),
+            'author_list' => Author::model()->getList()
+        ));
+    }
+
+    public function actionInsert()
+    {
+        Book::model()->create($_REQUEST['Book']);
     }
 
     public function actionUpdate($model)
     {
-        // Создание книги (доступно юзерам)
+        // Обновление книги (доступно юзерам)
     }
 
     public function actionDelete($id)
     {
-        // Создание книги (доступно юзерам)
+        // Удаление книги (доступно юзерам)
     }
 
     public function actionSubscribe()
     {
-        // Создание книги (доступно только гостям)
+        // Подписка на авторов (доступно только гостям)
     }
 
     public function accessRules()

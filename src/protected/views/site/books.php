@@ -59,6 +59,6 @@ $this->pageTitle=Yii::app()->name;
         <td><?php echo CHtml::link('Удаление', Yii::app()->createUrl('/book/delete/' . $book->book_id)); ?></td>
     </tr>
 	<?php endforeach ?>
-    <tr><td colspan="8">&nbsp;</td><td><?php echo CHtml::link('Добавить книгу', '/book/create'); ?></td></tr>
+    <tr><td colspan="8">&nbsp;</td><td><?php echo CHtml::link('Добавить книгу', Yii::app()->createUrl('/book/create')); ?></td></tr>
 </table>
 <?php } ?>

@@ -5,6 +5,7 @@ class Book extends CActiveRecord {
     public $book_id;
     public $book_title;
     public $book_authors;
+    public $book_authors_ids;
     public $book_year;
     public $book_desc;
     public $book_pic;
@@ -50,5 +51,48 @@ class Book extends CActiveRecord {
             JOIN authors a ON a.author_id = l.author_id
             GROUP BY b.book_id
         ", []);
+    }
+
+    public function create($data)
+    {
+        $model = new Book;
+
+        $transaction=$model->dbConnection->beginTransaction();
+        try {
+
+            $model->book_title = $data['book_title'];
+            $model->book_year = $data['book_year'];
+            $model->book_desc = $data['book_desc'];
+            $model->book_isbn = $data['book_isbn'];
+            $model->book_pic = $data['book_pic'];
+
+            // Запись книги в БД
+            if (!$model->save()) {
+                throw new Exception('Ошибка при сохранении книги');
+            }
+
+            // Получить id книги
+            $newBookId = $model->dbConnection->lastInsertID;
+            if ($newBookId <= 0) {
+                throw new Exception('Не удалось найти последнюю сохраненённую книгу');
+            }
+
+            // Записать связи с авторами
+            $linkModel = new LinkBookAuthor;
+            $linkModel->book_id = $newBookId;
+
+            foreach($data['book_authors_ids'] as $item) {
+                $linkModel->author_id = $item;
+                if (!$linkModel->save()) {
+                    throw new Exception('Ошибка при связывании книги с авторами');
+                }
+            }
+
+            $transaction->commit();
+
+        } catch (Exception $e) {
+            $transaction->rollback();
+            throw $e;
+        }
     }
 }
