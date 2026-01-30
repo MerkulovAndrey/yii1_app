@@ -100,6 +100,10 @@ class Book extends CActiveRecord {
             $transaction->rollback();
             throw $e;
         }
+
+        // Отправить уведомления о новой книге автора/авторов
+        $this->sendNewBookofAuthor($data['book_title'], $data['book_authors_ids_arr']);
+
     }
 
     public function updateItem($data)
@@ -142,6 +146,27 @@ class Book extends CActiveRecord {
             throw $e;
         }
 
+    }
+
+    protected function sendNewBookofAuthor($bookTitle, $authorsIds)
+    {
+        foreach ($authorsIds as $id) {
+            // получить имя автора
+            $author = Author::model()->getItem($id);
+
+            // получить телефоны подписчиков
+            $subscribers = Subscribe::model()->findAll('author_id=:id', ['id' => $id]);
+
+            // выполнить отправку
+            try {
+                if (!SmsNotification::sendNewBookofAuthor($subscribers, $author, $bookTitle)){
+                    throw new Exception('Не все SMS-уведомления были отправлены');
+                }
+            } catch (Exception $e) {
+                throw $e;
+            }
+
+        }
     }
 
     protected function afterDelete()

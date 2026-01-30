@@ -15,6 +15,17 @@ class Author extends CActiveRecord {
         return 'authors';
     }
 
+    public function getItem($authorId)
+    {
+        return $this->findBySql("
+            SELECT
+                a.author_id,
+                CONCAT_WS(' ', a.author_lname, a.author_fname, a.author_sname) as author_name
+            FROM authors a
+            WHERE a.author_id = :id
+        ", ['id' => $authorId]);
+    }
+
     public function getList()
     {
         return $this->findAllBySql("
