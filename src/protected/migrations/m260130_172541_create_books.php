@@ -18,7 +18,7 @@ class m260130_172541_create_books extends CDbMigration
 				KEY `books_book_year_IDX` (`book_year`) USING BTREE,
 				KEY `books_book_isbn_IDX` (`book_isbn`) USING BTREE,
 				FULLTEXT KEY `books_book_desc_IDX` (`book_desc`)
-			) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_as_cs COMMENT='Книги'
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_as_cs COMMENT='Книги'
 		", []);
 
 		$this->execute("
