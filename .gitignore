@@ -4,4 +4,3 @@ src/protected/runtime/*
 src/assets/*
 CHANGELOG
 UPGRADE
-docker-compose.yml
