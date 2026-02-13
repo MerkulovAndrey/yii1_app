@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # PHP + Apache
+  web:
+    build: .
+    container_name: php8.4-Apache2
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - mysql
+      - postgres
+    environment:
+      # Передаём настройки БД в окружение (опционально)
+      DB_MYSQL_HOST: mysql
+      DB_POSTGRES_HOST: postgres
+    networks:
+      - app-network
+
+  # MySQL 8.0
+  mysql:
+    image: mysql:8.0
+    container_name: mysql8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  # PostgreSQL 16
+  postgres:
+    image: postgres:16
+    container_name: postgres16
+    ports:
+      - "5438:5432"
+    environment:
+      POSTGRES_DB: app_db
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: apppass
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+networks:
+    app-network:
+        driver: bridge
+# Объявляем тома для сохранения данных
+volumes:
+  mysql-data:
+  postgres-data:
